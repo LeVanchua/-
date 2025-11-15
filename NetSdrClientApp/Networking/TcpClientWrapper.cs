@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NetSdrClientApp.Messages;
 
 namespace NetSdrClientApp.Networking
 {
@@ -24,6 +25,7 @@ namespace NetSdrClientApp.Networking
 
         public TcpClientWrapper(string host, int port)
         {
+            var samples = NetSdrMessageHelper.GetSamples(16, []);
             _host = host;
             _port = port;
         }
@@ -40,6 +42,7 @@ namespace NetSdrClientApp.Networking
 
             try
             {
+                _cts?.Dispose();
                 _cts = new CancellationTokenSource();
                 _tcpClient.Connect(_host, _port);
                 _stream = _tcpClient.GetStream();
